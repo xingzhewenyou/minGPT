@@ -7,6 +7,8 @@ import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from mingpt.model import GPT
 from mingpt.bpe import BPETokenizer
+
+
 # -----------------------------------------------------------------------------
 
 class TestHuggingFaceImport(unittest.TestCase):
@@ -18,7 +20,7 @@ class TestHuggingFaceImport(unittest.TestCase):
 
         # create a minGPT and a huggingface/transformers model
         model = GPT.from_pretrained(model_type)
-        model_hf = GPT2LMHeadModel.from_pretrained(model_type) # init a HF model too
+        model_hf = GPT2LMHeadModel.from_pretrained(model_type)  # init a HF model too
 
         # ship both to device
         model.to(device)
@@ -34,7 +36,7 @@ class TestHuggingFaceImport(unittest.TestCase):
         x1 = tokenizer(prompt).to(device)
         # ... with huggingface/transformers
         tokenizer_hf = GPT2Tokenizer.from_pretrained(model_type)
-        model_hf.config.pad_token_id = model_hf.config.eos_token_id # suppress a warning
+        model_hf.config.pad_token_id = model_hf.config.eos_token_id  # suppress a warning
         encoded_input = tokenizer_hf(prompt, return_tensors='pt').to(device)
         x2 = encoded_input['input_ids']
 
@@ -46,12 +48,13 @@ class TestHuggingFaceImport(unittest.TestCase):
         # now draw the argmax samples from each
         y1 = model.generate(x1, max_new_tokens=20, do_sample=False)[0]
         y2 = model_hf.generate(x2, max_new_tokens=20, do_sample=False)[0]
-        self.assertTrue(torch.equal(y1, y2)) # compare the raw sampled indices
+        self.assertTrue(torch.equal(y1, y2))  # compare the raw sampled indices
 
         # convert indices to strings
         out1 = tokenizer.decode(y1.cpu().squeeze())
         out2 = tokenizer_hf.decode(y2.cpu().squeeze())
-        self.assertTrue(out1 == out2) # compare the exact output strings too
+        self.assertTrue(out1 == out2)  # compare the exact output strings too
+
 
 if __name__ == '__main__':
     unittest.main()
