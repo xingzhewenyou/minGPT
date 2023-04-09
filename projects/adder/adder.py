@@ -194,7 +194,7 @@ if __name__ == '__main__':
     def batch_end_callback(trainer):
         global top_score
 
-        if trainer.iter_num % 1000 == 0:
+        if trainer.iter_num % 100 == 0:
             print(
                 f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
             # 每个epoch，打印loss信息
