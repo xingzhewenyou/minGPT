@@ -61,5 +61,6 @@ end_time = time.time()
 cost_time = end_time - start_time
 m, s = divmod(cost_time, 60)
 h, m = divmod(m, 60)
+print('*'*150)
 print("总计用时============%d:%02d:%02d" % (h, m, s))
 print('完美，向大神学习')
