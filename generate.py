@@ -9,7 +9,11 @@ start_time = time.time()
 set_seed(3407)
 
 use_mingpt = True  # use minGPT or huggingface/transformers model?
-model_type = 'gpt2-xl'
+path = '/Users/zhangwenyou/PycharmProjects/AIstudy4/minGPT/projects/adder/out/adder/model.pt'
+pretrained_dict = torch.load(path)
+model_type = 'gpt2'
+# model_type = 'gpt2-xl'
+# model_type = pretrained_dict
 device = 'cpu'
 
 if use_mingpt:
