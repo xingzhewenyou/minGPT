@@ -12,10 +12,12 @@ from torch.utils.data.dataloader import DataLoader
 from mingpt.model import GPT
 from mingpt.trainer import Trainer
 from mingpt.utils import set_seed, setup_logging, CfgNode as CN
+from matplotlib import pyplot as plt
 import time
 
 start_time = time.time()
-
+train_loss_results = []  # 将每轮的loss记录在此列表中，为后续画loss曲线提供数据
+loss_all = 0  # 每轮分4个step，loss_all记录四个step生成的4个loss的和
 
 # -----------------------------------------------------------------------------
 
@@ -116,6 +118,14 @@ if __name__ == '__main__':
         if trainer.iter_num % 10 == 0:
             print(
                 f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
+            # 每个epoch，打印loss信息
+            print("Epoch {}, loss: {}".format(trainer.iter_num, trainer.loss.item()))
+            train_loss_results.append(loss_all / 4)  # 将4个step的loss求平均记录在此变量中
+            # loss_all = 0  # loss_all归零，为记录下一个epoch的loss做准备
+
+            # print("Epoch {}, loss: {}".format(epoch, loss_all / 4))
+            # train_loss_results.append(loss_all / 4)  # 将4个step的loss求平均记录在此变量中
+            # loss_all = 0  # loss_all归零，为记录下一个epoch的loss做准备
 
         if trainer.iter_num % 500 == 0:
             # evaluate both the train and test score
@@ -146,3 +156,19 @@ if __name__ == '__main__':
     h, m = divmod(m, 60)
     print('*' * 150)
     print("总计用时============%d:%02d:%02d" % (h, m, s))
+
+    # 绘制 loss 曲线
+    plt.title('Loss Function Curve')  # 图片标题
+    plt.xlabel('Epoch')  # x轴变量名称
+    plt.ylabel('Loss')  # y轴变量名称
+    plt.plot(train_loss_results, label="$Loss$")  # 逐点画出trian_loss_results值并连线，连线图标是Loss
+    plt.legend()  # 画出曲线图标
+    plt.show()  # 画出图像
+
+    # # 绘制 Accuracy 曲线
+    # plt.title('Acc Curve')  # 图片标题
+    # plt.xlabel('Epoch')  # x轴变量名称
+    # plt.ylabel('Acc')  # y轴变量名称
+    # plt.plot(test_acc, label="$Accuracy$")  # 逐点画出test_acc值并连线，连线图标是Accuracy
+    # plt.legend()
+    # plt.show()
