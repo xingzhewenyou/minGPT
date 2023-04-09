@@ -120,7 +120,7 @@ if __name__ == '__main__':
                 f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}")
             # 每个epoch，打印loss信息
             print("Epoch {}, loss: {}".format(trainer.iter_num, trainer.loss.item()))
-            train_loss_results.append(loss_all / 4)  # 将4个step的loss求平均记录在此变量中
+            train_loss_results.append(trainer.loss.item())  # 将4个step的loss求平均记录在此变量中
             # loss_all = 0  # loss_all归零，为记录下一个epoch的loss做准备
 
             # print("Epoch {}, loss: {}".format(epoch, loss_all / 4))
